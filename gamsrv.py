@@ -1,6 +1,6 @@
 import copy
 
-from dijkstra import find_min_latency
+from dijkstra import find_min_latency, dijkstra
 from edge import Edge
 
 if __name__ == "__main__":
@@ -11,15 +11,14 @@ if __name__ == "__main__":
         for x in clients:
             routers.remove(x)
 
-        graph = [[]] * int(nodes_number)
+        graph = []
+        for _ in range(int(nodes_number)):
+            graph.append([])
+
         for i in range(int(edges_number)):
             node_index, edge_to, weight = fileIn.readline().split()
-            graph_inside = copy.deepcopy(graph[int(node_index) - 1])
-            graph_inside.append(Edge(int(edge_to), int(weight)))
-            graph[int(node_index) - 1] = graph_inside
-            graph_inside_2 = copy.deepcopy(graph[int(edge_to) - 1])
-            graph_inside_2.append(Edge(int(node_index), int(weight)))
-            graph[int(edge_to) - 1] = graph_inside_2
+            graph[int(node_index) - 1].append(Edge(int(edge_to), int(weight)))
+            graph[int(edge_to) - 1].append(Edge(int(node_index), int(weight)))
 
     with open("gamsrv.out", "w+") as fileOut:
         fileOut.write("%d" % find_min_latency(graph, clients, routers))
